@@ -1,0 +1,45 @@
+name: Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: python -m unittest discover -s test -p 'test_*.py'
+      - name: Check monitor container
+        run: |
+          docker build --tag aardvarkland-process-monitor .
+          docker run --detach --rm --name process-monitor --publish 127.0.0.1:4188:4188 aardvarkland-process-monitor
+          trap 'docker rm -f process-monitor >/dev/null 2>&1 || true' EXIT
+          curl --fail --silent --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:4188/health
+          curl --fail --silent --json '{"available":false}' http://127.0.0.1:4188/api/run | python -c 'import json,sys; assert json.load(sys.stdin)["status"] == "failed"'
+          curl --fail --silent --json '{"available":true}' http://127.0.0.1:4188/api/run | python -c 'import json,sys; result=json.load(sys.stdin); assert result["status"] == "completed" and len(result["events"]) == 2'
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Deploy preview
+        id: deployment
+        uses: actions/deploy-pages@v4

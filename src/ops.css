@@ -1,0 +1,30 @@
+.shell{min-height:100vh;display:grid;grid-template-columns:218px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100dvh;padding:20px 12px;background:#f8f8fa;border-right:1px solid var(--border)}
+.sidebar .brand{padding:0 8px 24px}.brand strong,.brand small{display:block}
+.brand small{font-size:.78rem;color:var(--muted);margin-top:3px}
+.sidebar nav{display:grid;gap:4px}.sidebar nav a{display:flex;gap:9px;align-items:center;padding:9px 10px;border-radius:8px;color:inherit;text-decoration:none;font-size:.86rem}
+.sidebar nav a:hover,.sidebar nav a[aria-current=page]{background:#eeedf5;color:#393b8c}
+.sidebar nav a[aria-current=page]{font-weight:650}
+.topbar{height:57px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);padding:0 25px;font-size:.86rem}
+.topbar span:first-child{color:var(--muted)}.divider{height:16px;width:1px;background:var(--border)}
+main{width:min(100% - 44px,1010px)}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stat{display:grid;gap:7px;padding:11px 12px;background:#f7f7fa;border:1px solid var(--border);border-radius:9px;font-variant-numeric:tabular-nums}
+.stat span{font-size:.79rem;color:var(--muted)}.stat strong{font-size:1.36rem;letter-spacing:-.035em}
+fieldset{border:0;min-width:0;padding:0;margin:0;display:grid;gap:13px}fieldset button{justify-self:start}
+.ticket-picker{display:grid;gap:6px}
+.checkline{display:flex;align-items:center;gap:8px}.checkline input{min-height:0;width:16px;height:16px;accent-color:var(--accent)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:11px}.replay-controls{justify-content:flex-start;align-items:flex-end}
+.replay-controls label{max-width:220px}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:8px}
+table{width:100%;border-collapse:collapse;text-align:left;font-size:.84rem}
+td,th{padding:10px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
+th[scope=row]{font-weight:610}thead th{background:#f7f7fa;color:#474a56}
+tr:last-child td,tr:last-child th[scope=row]{border-bottom:0}
+td:nth-child(n+3){white-space:nowrap;font-variant-numeric:tabular-nums}
+.table-note{display:block;margin-top:3px}
+@media(max-width:830px){
+ .shell{display:block}.sidebar{position:static;height:auto;padding:11px 12px;border-right:0;border-bottom:1px solid var(--border)}
+ .sidebar .brand{padding:0 2px 7px}.sidebar nav{display:flex;gap:3px;overflow:auto}.sidebar nav a{white-space:nowrap;gap:5px;padding:7px 8px;font-size:.8rem}
+ .sidebar svg{width:16px;height:16px}.topbar{display:none}main{width:calc(100% - 26px)}
+}
+@media(max-width:400px){.fields{grid-template-columns:1fr}.replay-controls label{max-width:none;width:100%}}

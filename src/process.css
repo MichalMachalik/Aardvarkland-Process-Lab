@@ -1,0 +1,4 @@
+.ticket-picker{display:grid;gap:6px}
+.links{display:flex;flex-wrap:wrap;gap:12px;font-size:.86rem}
+@media(max-width:830px){.sidebar nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}.sidebar nav a{white-space:normal}}
+@media(max-width:349px){.sidebar nav a{padding-inline:5px}}
