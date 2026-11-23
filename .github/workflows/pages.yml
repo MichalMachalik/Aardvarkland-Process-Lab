@@ -29,11 +29,15 @@ jobs:
       - run: npm test
       - run: python -m unittest discover -s test -p 'test_*.py'
       - name: Check monitor container
+        shell: bash
         run: |
           docker build --tag aardvarkland-process-monitor .
           docker run --detach --rm --name process-monitor --publish 127.0.0.1:4188:4188 aardvarkland-process-monitor
           trap 'docker rm -f process-monitor >/dev/null 2>&1 || true' EXIT
-          curl --fail --silent --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:4188/health
+          if ! curl --fail --silent --show-error --retry 10 --retry-all-errors --retry-delay 1 --max-time 3 http://127.0.0.1:4188/health; then
+            docker logs process-monitor
+            exit 1
+          fi
           curl --fail --silent --json '{"available":false}' http://127.0.0.1:4188/api/run | python -c 'import json,sys; assert json.load(sys.stdin)["status"] == "failed"'
           curl --fail --silent --json '{"available":true}' http://127.0.0.1:4188/api/run | python -c 'import json,sys; result=json.load(sys.stdin); assert result["status"] == "completed" and len(result["events"]) == 2'
       - run: npm run build
